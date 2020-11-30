@@ -10,22 +10,30 @@
                 @forelse ($todos as $todo)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     @if ($todo->completed)
-                        <s class="text-muted">{{$todo->title}}</s>
+                        <a href="{{route('todo.show', $todo->id)}}">
+                            <s class="text-muted">{{$todo->title}}</s>
+                        </a>
+                        
                     @else 
-                        {{$todo->title}}
+                        <a href="{{route('todo.show', $todo->id)}}">{{$todo->title}}</a>
+                        
                     @endif
                         
                     <span class="d-flex justify-content-space-around align-items-center">
                             
                         @include('todos.completeButton')
 
-                        <a href="{{route('todo.edit', $todo->id)}}" class="btn btn-sm btn-info m-1">Edit</a>
+                        <a href="{{route('todo.edit', $todo->id)}}" class="btn btn-info btn-sm">
+                            <i class="fas fa-cog"></i>
+                        </a>
 
                         <button class="btn btn-sm btn-danger m-1" onclick="event.preventDefault();
                         if(confirm('Do you want to delete {{$todo->title}}?')){
                             document.getElementById('form-delete-{{$todo->id}}').submit()
                         }
-                        ">&times;</button>
+                        ">
+                            <i class="fas fa-times"></i>
+                        </button>
 
                         <form id="{{'form-delete-' . $todo->id}}" action="{{route('todo.destroy', $todo->id)}}" method="post" style="display: none">
                             @csrf
@@ -46,7 +54,9 @@
 
             <div class="d-flex justify-content-end">
                 <a href="/todo/create" class="btn btn-primary my-2 ">&plus;</a>
-            </div>            
+            </div>
+
+            
         </div>
     </div>
 @endsection

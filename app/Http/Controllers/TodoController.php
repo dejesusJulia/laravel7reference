@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TodoCreateRequest;
 use Illuminate\Http\Request;
 use App\Todo;
+use App\Step;
 use Illuminate\Support\Facades\Validator;
 
 class TodoController extends Controller
@@ -29,6 +30,11 @@ class TodoController extends Controller
 
         // return view('todos.index')->with(['todos' => $todos]);
         return view('todos.index', compact('todos'));
+    }
+
+    public function show(Todo $todo){
+
+        return view('todos.show', compact('todo'));
     }
 
     public function create(){
@@ -64,13 +70,37 @@ class TodoController extends Controller
         // $userId = auth()->id;
         // $request['user_id'] = $userId;
 
-        auth()->user()->todos()->create($request->all());
         // Todo::create($request->all());
+        $todo = auth()->user()->todos()->create($request->all());
+        if($request->step){
+            foreach($request->step as $step){
+                $todo->steps()->create(['name' => $step]);
+            }
+        }
+        
+        
         return redirect(route('todo.index'))->with('successMessage', 'Todo successfully created!');
     }
 
     public function update(TodoCreateRequest $request, Todo $todo){
-        $todo->update(['title' => $request->title]);
+
+        $todo->update([
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
+
+        if($request->stepName){
+            foreach($request->stepName as $key => $value){
+                $id = $request->stepId[$key];
+                if(!$id){
+                    $todo->steps()->create(['name' => $value]);
+                }else{
+                    $step = Step::find($id);
+                    $step->update(['name' => $value]);
+                }
+                
+            }
+        }
         return redirect(route('todo.index'))->with('successMessage', 'Todo updated successfully');
     }
 
@@ -85,6 +115,7 @@ class TodoController extends Controller
     }
 
     public function destroy(Todo $todo){
+        $todo->steps->each->delete();
         $todo->delete();
         return redirect()->back()->with('successMessage', 'Todo deleted successfully!');
     }

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <a href="/todo" class="btn btn-info">&larr;</a>
+    <a href="/todo" class="btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="col-6 offset-3 my-3">
         <div class="card mx-auto my-3">
             <div class="card-header">
@@ -26,9 +28,9 @@
     
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea name="description" id="description" cols="30" rows="10" class="form-control">{{$todo->description}}</textarea>
+                            <textarea name="description" id="description" cols="30" rows="5" class="form-control">{{$todo->description}}</textarea>
                         </div>
-    
+                        @livewire('edit-step', ['steps' => $todo->steps])
                         <button type="submit" class="btn btn-block btn-primary">Update task</button>
                 </form>
             </div>

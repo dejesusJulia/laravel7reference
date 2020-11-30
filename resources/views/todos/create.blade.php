@@ -1,7 +1,10 @@
+{{-- resources/views/todos --}}
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <a href="/todo" class="btn btn-info">&larr;</a>
+    <a href="/todo" class="btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="col-6 offset-3 my-3">
         <div class="card mx-auto my-3">
             <div class="card-header">
@@ -9,6 +12,7 @@
             </div>
             <div class="card-body">
                 <x-alert/>
+
             <form action="{{route('todo.store')}}" method="post" class="form">
                     @csrf
                     <div class="form-group">
@@ -22,12 +26,15 @@
                     </div>
 
                     <div class="form-group">
-                        <textarea name="description" id="description" cols="30" rows="10" class="form-control" placeholder="description"></textarea>
+                        <textarea name="description" id="description" cols="30" rows="5" class="form-control" placeholder="description"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-block btn-primary">Add task</button>
+                    @livewire('step')  
+
+                    <button type="submit" id="createBtn" class="btn btn-block btn-primary">Add task</button>
                 
                 </form>
+                 
             </div>
         </div>
     </div>
